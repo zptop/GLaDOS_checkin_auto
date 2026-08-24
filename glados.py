@@ -36,7 +36,22 @@ if __name__ == '__main__':
             requests.get('http://www.pushplus.plus/send?token=' + sckey + '&content='+email+'cookie已失效')
             print('cookie已失效')  # 日志输出
      #--------------------------------------------------------------------------------------------------------#   
-    if sckey != "":
-         requests.get('http://www.pushplus.plus/send?token=' + sckey + '&title='+email+'签到成功'+'&content='+sendContent)
+if sckey:
+    try:
+        push_response = requests.post(
+            "https://www.pushplus.plus/send",
+            json={
+                "token": sckey,
+                "title": "VPN签到结果",
+                "content": sendContent,
+                "template": "txt"
+            },
+            timeout=20
+        )
+        print("PushPlus推送结果：", push_response.status_code, push_response.text)
+    except Exception as error:
+        print("PushPlus推送失败：", str(error))
+else:
+    print("未读取到PUSHPLUS_TOKEN")
 
 
